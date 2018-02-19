@@ -6,11 +6,11 @@ import { increment, undo, redo } from './ducks/counter.js';
 
 class App extends Component {
   render() {
-    let { value, increment } = this.props;
+    const { currentValue, previousValues, futureValues, increment, undo, redo } = this.props;
     return (
       <div className="app">
         <section className="counter">
-          <h1 className="counter__current-value">{value}</h1>
+          <h1 className="counter__current-value">{currentValue}</h1>
           <div className="counter__button-wrapper">
             <button
               className="counter__button increment-one"
@@ -39,15 +39,15 @@ class App extends Component {
             <br />
             <button
               className="counter__button undo"
-              disabled={false}
-              onClick={() => undo(value)}
+              disabled={previousValues.length === 0}
+              onClick={() => undo()}
             >
               Undo
             </button>
             <button
               className="counter__button redo"
-              disabled={false}
-              onClick={() => redo(value)}
+              disabled={futureValues.length === 0}
+              onClick={() => redo()}
             >
               Redo
             </button>
@@ -68,13 +68,13 @@ function mapStateToProps(state) {
     return {};
   }
   return {
-    value: state.value
-    // power2: state.value * state.value,
-    // sqrt: Math.sqrt(state.value)
+    currentValue: state.currentValue,
+    previousValues: state.previousValues,
+    futureValues: state.currentValue
   }
 }
 
-let actions = { increment };
+let actions = { increment, undo, redo};
 
 let connected = connect(mapStateToProps, actions);
 export default connected(App);

@@ -13,24 +13,18 @@ export function increment(num) {
     };
 }
 
-export function undo(num) {
-    return {
-        type: UNDO,
-        num
-    };
+export function undo() {
+    return { type: UNDO };
 }
 
-export function redo(num) {
-    return {
-        type: REDO,
-        num
-    };
+export function redo() {
+    return { type: REDO };
 }
 
-let initialState = {
-    value: 0,
-    undo: [],
-    redo: []
+const initialState = {
+    currentValue: 0,
+    futureValues: [],
+    previousValues: []
 }
 // REDUCER
 export default function reducer(state = initialState, action) {
@@ -39,13 +33,19 @@ export default function reducer(state = initialState, action) {
         case INCREMENT:
             let newVal = action.num + state.value;
             return Object.assign({}, state, { value: newVal });
-        case UNDO :
-            let undo = [...state.undo, action.num];
-            return Object.assign({}, state, {undo});
-        case REDO :
-            let redo = [...state.redo, action.num];
-            return Object.assign({}, state, {redo});
-        default :
+        case UNDO:
+            return {
+                currentValue: state.previousValues[0],
+                futureValues: [state.currentValue, ...state.futureValues],
+                previousValues: state.previousValues.slice(1, state.previousValues.length)
+            };
+        case REDO:
+            return {
+                currentValue: state.futureValues[0],
+                futureValues: state.futureValues.slice(1, state.futureValues.length),
+                previousValues: [state.currentValue, ...state.previousValues]
+            };
+        default:
             return state;
     }
 }
