@@ -31,8 +31,11 @@ export default function reducer(state = initialState, action) {
 
     switch (action.type) {
         case INCREMENT:
-            let newVal = action.num + state.value;
-            return Object.assign({}, state, { value: newVal });
+            return {
+                currentValue: state.currentValue + action.num,
+                futureValues: [],
+                previousValues: [state.currentValue, ...state.previousValues]
+            };
         case UNDO:
             return {
                 currentValue: state.previousValues[0],

@@ -70,11 +70,11 @@ function mapStateToProps(state) {
   return {
     currentValue: state.currentValue,
     previousValues: state.previousValues,
-    futureValues: state.currentValue
+    futureValues: state.futureValues
   }
 }
 
-let actions = { increment, undo, redo};
+let actions = { increment, undo, redo };
 
 let connected = connect(mapStateToProps, actions);
 export default connected(App);
